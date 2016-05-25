@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','teams'
     ];
 
     /**
@@ -24,8 +24,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function allTeams(){
+        return Team::all();
+    }
 
     public function reports(){
-        return $this->hasMany('App\Report');
+        return $this->hasMany(Report::class);
+    }
+    public function teams(){
+        return $this->belongsToMany(Team::class);
     }
 }

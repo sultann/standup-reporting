@@ -14,6 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('test', function () {
+//    $result = App\Team::all();
+    $result = App\Team::find(1)->members()->get();
+    return $result;
+});
 
 Route::auth();
 

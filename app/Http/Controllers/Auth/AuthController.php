@@ -40,6 +40,17 @@ class AuthController extends Controller
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
+    public function showRegistrationForm()
+    {
+        if (property_exists($this, 'registerView')) {
+            return view($this->registerView);
+        }
+        $teams = \App\Team::all()->toArray();
+        return \View::make('auth.register')->with('teams', $teams);
+//        return view('auth.register');
+
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -52,6 +63,7 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'teams'   => 'required'
         ]);
     }
 
@@ -63,10 +75,18 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+            $user = new User();
+            $user->name      = $data['name'];
+            $user->email     = $data['email'];
+            $user->password  = bcrypt($data['password']);
+            $user->save();
+            $user->teams()->attach($data['teams']);
+            return $user;
+//        return User::create([
+//            'name' => $data['name'],
+//            'email' => $data['email'],
+//            'password' => bcrypt($data['password']),
+//            'team_id' => $data['teams']
+//        ]);
     }
 }

@@ -37,6 +37,25 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('teams') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Select Your Team</label>
+
+                            <div class="col-md-6">
+                                <select name="teams" class="form-control">
+                                    <option value="">Select</option>
+                                    @foreach($teams as $team)
+
+                                        <option value=" {{$team['id']}}"> {{$team['team_name']}}</option>
+                                    @endforeach
+
+                                </select>
+                                @if ($errors->has('teams'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('teams') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Password</label>
