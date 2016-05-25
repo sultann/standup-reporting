@@ -20,3 +20,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 });
 
 
+$factory->define(App\Report::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => $faker->numberBetween(1, 50),
+        'task_done' => $faker->text(500),
+        'blocker' => $faker->text(250),
+        'blocker_status' => $faker->numberBetween(0,1),
+        'can_update' => $faker->numberBetween(0,1),
+    ];
+});

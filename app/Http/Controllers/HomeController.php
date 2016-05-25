@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
@@ -24,6 +27,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if(Auth::user()->role == 'admin'){
+            $reports =  DB::table('reports')->get();
+            return view::make('home-admin')->with('reports', $reports);
+        }else{
+            $reports =  DB::table('reports')->get();
+            return view::make('home')->with('reports', $reports);
+        }
+
     }
 }

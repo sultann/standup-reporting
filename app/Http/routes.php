@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 Route::get('test', function () {
 //    $result = App\Team::all();
     $result = App\Team::find(1)->members()->get();
@@ -23,3 +21,4 @@ Route::get('test', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+Route::post('report/update', 'ReportController@update');
