@@ -5,7 +5,34 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Your StandUp reports for {{date('M')}}</div>
+                    <div class="panel-heading"><b>Today's</b> StandUp Reports of Your Team</div>
+
+                    <div class="panel-body">
+                        @if(count($reports>0))
+                        <table class="table table-condensed">
+                            <thead> <tr><th style="min-width: 150px;">Date</th> <th>Report</th>  <th>Blocker</th></tr></thead>
+                            {{--{{dd($reports)}}--}}
+                            @foreach($reports as $report)
+                                <tr>
+                                    <td>
+                                        {{$report->created_at}}
+                                    </td>
+                                    <td>
+                                        {{$report->task_done}}
+                                    </td>
+                                    <td>
+                                        {{$report->blocker}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                        @else
+                        No StandUp Report Found
+                        @endif
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Your StandUp Reports for The Month of <b>{{date('M')}}</b></div>
 
                     <div class="panel-body">
                         <table class="table table-condensed">
@@ -32,7 +59,8 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">Update Your StandUp for today</div>
-
+{{--{{dd($today)}}--}}
+{{--{{dd($lastDay)}}--}}
                     <div class="panel-body">
                         {!! Form::open(array('url' => 'report/update')) !!}
                         <div class="form-group">
@@ -60,4 +88,5 @@
             </div>
         </div>
     </div>
+
 @endsection

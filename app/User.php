@@ -35,4 +35,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class);
     }
 
+
+    
+
 }

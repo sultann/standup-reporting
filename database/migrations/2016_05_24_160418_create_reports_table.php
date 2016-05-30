@@ -16,8 +16,8 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->text('task_done', 500);
-            $table->text('blocker', 250);
+            $table->text('task_done', 500)->nullable();
+            $table->text('blocker', 250)->nullable();
             $table->boolean('blocker_status')->default(1);
             $table->boolean('can_update')->default(0);
             $table->timestamps();
@@ -32,5 +32,6 @@ class CreateReportsTable extends Migration
     public function down()
     {
         Schema::drop('teams');
+//        Schema::dropForeign('user_id');
     }
 }

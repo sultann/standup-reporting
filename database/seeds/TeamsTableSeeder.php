@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
 class TeamsTableSeeder extends Seeder
 {
     /**
@@ -31,7 +30,7 @@ class TeamsTableSeeder extends Seeder
 
 
         foreach ($this->teams as $team){
-                App\Team::insert(['team_name' => $team]);
+            \App\Team::insert(['team_name' => $team]);
         }
     }
 }

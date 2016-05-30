@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Report;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -30,5 +32,10 @@ class ReportController extends Controller
        // dd($report);
         $report->save();
         return redirect('/');
+    }
+
+
+    public function lastDayReport(){
+        $lastDayReport = DB::table('reports')->where('user_id', Auth::user()->id)->where('create_at', Carbon::yesterday());
     }
 }

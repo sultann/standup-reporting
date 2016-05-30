@@ -11,6 +11,7 @@ class ReportsTableSeeder extends Seeder
      */
     public function run()
     {
-//        factory('App\Team', 50)->create();
+        DB::table('reports')->delete();
+        factory('App\Report', 50)->create();
     }
 }
