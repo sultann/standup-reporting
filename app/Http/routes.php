@@ -12,45 +12,86 @@
 */
 
 use App\Report;
+use App\Team;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'HomeController@index');
-Route::get('test', function () {
-//    $result = App\Team::all();
-    $result = App\Team::find(1)->members()->get();
-    return $result;
-});
-
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
 Route::post('report/update', 'ReportController@update');
+Route::get('profile', 'ProfileController@index');
+Route::post('profile/update', 'ProfileController@update');
+Route::get('test1', function (){
+    $teams = \App\Team::all();
+    $teams->load(['members.reports' => function ($query) {
+        $query->wheredate('created_at', '=', Carbon::yesterday()->toDateString());
+    }]);
+//    return $teams;
+    foreach ($teams as $team){
 
-Route::get('standup-robot', function (){
-//
-// $allUser = User::all();
-//    foreach ($allUser as $user){
-//        $report = new \App\Report();
-//        $report->user_id = $user->id;
-//        $report->task_done = NULL;
-//        $report->blocker = NULL;
-//        $report->blocker_status = 0;
-//        $report->can_update = 1;
-//        $report->save();
-//    }
-////    dd(Carbon::yesterday());
-//    $report = DB::table('reports')
-//            ->where('user_id', '=', 10)
-//            ->whereDate('created_at', '=', Carbon::yesterday()->toDateString())
-//            ->get();
-//            return $report;
+        foreach ($team->members as $member){
+            if(count($member->reports)>1){
+                echo $member->reports;
+            }
+        }
 
-    $reports =  DB::table('reports')
-        ->where('user_id', '=', 11)
-        ->wheredate('created_at', '=', Carbon::today()->toDateString())
-        ->get();
-    return $reports;
+    }
+});
+Route::get('test', function() {
+    $teams = \App\Team::all();
+    $teams->load(['members.reports' => function ($query) {
+        $query->wheredate('created_at', '=', Carbon::yesterday()->toDateString());
+    }]);
+
+    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+    $section = $phpWord->addSection();
+    $header = array('size' => 16, 'bold' => true,'alignment' => 'center');
+    $reportHeader = 'StandUp Report for the day of '. date('jS F, Y');
+    $section->addText(htmlspecialchars($reportHeader, ENT_COMPAT, 'UTF-8'), $header);
+    $lineStyle = array('weight' => 1, 'width' => 300, 'height' => 0, 'color' => 635552);
+    $section->addLine($lineStyle);
+    foreach ($teams as $team){
+        $section->addTextBreak(3);
+        $section->addText(htmlspecialchars($team->team_name, ENT_COMPAT, 'UTF-8'), $header);
+        $styleTable = array('borderSize' => 1, 'borderColor' => '000', 'cellMargin' => 80, 'alignment' => 'center');
+        $styleFirstRow = array('borderBottomSize' => 2, 'borderBottomColor' => '000');
+        $styleCell = array('valign' => 'center','alignment' => 'center');
+        $fontStyle = array('bold' => true);
+        $phpWord->addTableStyle('Team Table', $styleTable, $styleFirstRow);
+        $table = $section->addTable('Team Table');
+        $table->addRow(900);
+        $table->addCell(2700, $styleCell)->addText(htmlspecialchars('Name', ENT_COMPAT, 'UTF-8'), $fontStyle);
+        $table->addCell(2700, $styleCell)->addText(htmlspecialchars('Task Done', ENT_COMPAT, 'UTF-8'), $fontStyle);
+        $table->addCell(2700, $styleCell)->addText(htmlspecialchars('Blocker', ENT_COMPAT, 'UTF-8'), $fontStyle);
+        foreach ($team->members as $team_member){
+            $table->addRow();
+            $table->addCell(2000)->addText(htmlspecialchars($team_member->name, ENT_COMPAT, 'UTF-8'));
+            if(count($team_member->reports->toArray())>0){
+                foreach ($team_member->reports as $report){
+                    $table->addCell(2000)->addText(htmlspecialchars($report->task_done, ENT_COMPAT, 'UTF-8'));
+                    $table->addCell(2000)->addText(htmlspecialchars(empty($report->blocker)?'X':$report->blocker, ENT_COMPAT, 'UTF-8'));
+                }
+            }else{
+                $table->addCell(2000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
+                $table->addCell(2000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
+            }
+        }
+    }
+//    $footer->addPreserveText('Page {PAGE} of {NUMPAGES}.');
+    $parentFolder = date('Y');
+    $childFolder = date('M');
+    $fileName   = 'Reports-'. date('d-m-y').'.docx';
+    $dirStrucre = './'.$parentFolder.'/'.$childFolder.'/';
+    if(!is_dir($dirStrucre)){
+        mkdir("./".$parentFolder.'/'.$childFolder,  0777, true);
+    }
+
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+    $objWriter->save($dirStrucre.'/'.$fileName);
+
 
 });
+

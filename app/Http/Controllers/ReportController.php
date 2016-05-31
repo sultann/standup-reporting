@@ -33,9 +33,5 @@ class ReportController extends Controller
         $report->save();
         return redirect('/');
     }
-
-
-    public function lastDayReport(){
-        $lastDayReport = DB::table('reports')->where('user_id', Auth::user()->id)->where('create_at', Carbon::yesterday());
-    }
+    
 }

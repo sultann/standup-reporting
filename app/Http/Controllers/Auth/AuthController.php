@@ -82,11 +82,6 @@ class AuthController extends Controller
             $user->save();
             $user->teams()->attach($data['teams']);
             return $user;
-//        return User::create([
-//            'name' => $data['name'],
-//            'email' => $data['email'],
-//            'password' => bcrypt($data['password']),
-//            'team_id' => $data['teams']
-//        ]);
+
     }
 }
