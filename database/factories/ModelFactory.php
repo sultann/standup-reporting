@@ -24,10 +24,15 @@ $factory->define(App\Report::class, function (Faker\Generator $faker) {
     return [
         'user_id' => $faker->numberBetween(1, 80),
         'task_done' => $faker->text(500),
+        'created_at'    => $faker->unique()->dateTimeBetween('-5 days', 'now')
+    ];
+});
+
+$factory->define(App\Blocker::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => $faker->numberBetween(1, 80),
         'blocker' => $faker->text(250),
-        'blocker_status' => $faker->numberBetween(0,1),
-        'can_update' => $faker->numberBetween(0,1),
-        'created_at'    => $faker->dateTimeBetween('-20 days', 'now')
+        'status' => $faker->numberBetween(0,1)
     ];
 });
 

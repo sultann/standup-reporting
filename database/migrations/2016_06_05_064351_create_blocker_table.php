@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReportsTable extends Migration
+class CreateBlockerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,12 @@ class CreateReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('blockers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->text('task_done', 500);
-//            $table->boolean('can_update')->default(0);
+            $table->text('blocker', 250)->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
@@ -29,7 +29,6 @@ class CreateReportsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('teams');
-//        Schema::dropForeign('user_id');
+        Schema::drop('blockers');
     }
 }

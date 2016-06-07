@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -29,11 +30,33 @@ class User extends Authenticatable
     }
 
     public function reports(){
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Report::class)->orderBy('created_at', 'desc');
     }
+    
     public function teams(){
         return $this->belongsToMany(Team::class);
     }
+    public function blockers(){
+        return $this->hasMany(Blocker::class);
+    }
 
+    public function openBlockers(){
+        return $this->hasMany(Blocker::class)->where('status', '=', 1)->orderBy('created_at', 'desc');
+    }
+
+    public function lastReport ()
+    {
+        return $this->hasMany(Report::class)->wheredate('created_at', '<', Carbon::today()->toDateString())->orderBy('created_at', 'desc')->take(1);
+    }
+    public function todaysReport ()
+    {
+        return $this->hasMany(Report::class)->wheredate('created_at', '=', Carbon::today()->toDateString())->take(1);
+    }
+    public function lastEmptyReport ()
+    {
+        return $this->whereDoesntHave('reports', function ($q){
+            return $q->wheredate('created_at', '=', Carbon::today()->toDateString());
+        }); // Order it by anything you want
+    }
     
 }

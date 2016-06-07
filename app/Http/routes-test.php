@@ -10,58 +10,99 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+use App\Report;
+use App\Team;
+use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'HomeController@index');
-Route::Post('/', 'HomeController@filteredReport');
 Route::auth();
 
-Route::get('report/create', 'ReportController@create');
-Route::post('report/store', 'ReportController@store');
-Route::get('report/user/{id}', 'ReportController@index');
-Route::get('report/team/{id}', 'ReportController@teamReport');
-//Route::post('report/filtered-reports', 'ReportController@filteredReports');
-//Route::post('report/filtered-reports', 'ReportController@filteredReports');
-
+Route::get('/home', 'HomeController@index');
+Route::post('report/update', 'ReportController@update');
+Route::post('report/{$id}/index', 'ReportController@index');
 Route::get('profile', 'ProfileController@index');
 Route::post('profile/update', 'ProfileController@update');
-
-
-//Route::get('/?select-date-filter')
-
+Route::get('blockers', function (){
+    $teams = \App\Blocker();
+    $teams->where('status', '=', 1);
+    return $teams;
+});
+Route::get('test10', function (){
+    $teams = new Report();
+    $teams->where('blocker_status', '=', 1);
+    return $teams;
+});
 Route::get('test1', function (){
-    $MonthlyReports = Auth::user();
-    $MonthlyReports->load(['reports'=> function ($query) {
-        $query->whereMonth('created_at', '=', date('m'));
-        $query->orderBy('created_at', 'desc');
-    }])->get();
 
-    $MonthlyReports->load(['teams.members.reports']);
-    $MonthlyReports->load(['blockers']);
-    return $MonthlyReports;
+//    $info = DB::select(DB::raw('SELECT user_id FROM reports WHERE date(created_at) = "2016-06-01"'));
+//    $info = DB::select(DB::raw('select id, email, name from users WHERE id not in (SELECT user_id FROM reports WHERE date(created_at) = "'.Carbon::today()->toDateString().'"')
+//    $info = DB::select(DB::raw('SELECT user_id FROM reports WHERE date(created_at) = "'.Carbon::today()->toDateString().'"'));
+//    $mylist = [];
+//    foreach ($info as $aInfo){
+//        $mylist[] = $aInfo->user_id;
+//    }
+//  // return $info;
+//    //select id, email from users WHERE id not in (SELECT user_id FROM reports WHERE date(created_at) = '2016-06-01')
+//    $teams = \App\Team::all();
+//    $teams->load(['members' => function($m) use ($mylist){
+//        function ($query){
+//            // $query->whereNotIn('id',$info);
+//        }
+//
+//    }]);
+//    return $teams;
+//    foreach ($teams as $team){
+//
+//        foreach ($team->members as $member){
+//            if(count($member->reports)>1){
+//                echo $member->reports;
+//            }
+//        }
+//
+//    }
+
+//    $user = Team::all();
+//    $user->load(['members'] => function($query){
+//
+//        return $query;
+//    });
+    $users = new App\User();
+    return $users->lastEmptyReport()->get();
+    $users->load([
+        'lastEmptyReport'  => function ($query) {
+//        if(!count($query->take(1)->latest())<1){
+//        var_dump($query);
+            return $query->take(1);
+//        }
+        }
+    ]);
+    return $users;
+//    echo  $users;
 });
-
 Route::get('test2', function (){
-    $blocker = new \App\Blocker();
-    $blocker->all()->orderBy('created_at', 'desc');
-    $blocker->load(['user']);
-    return $blocker;
-});
-Route::get('test3', function (){
-   $time = \App\User::all();
-    return $time;
+    $user_reports = Auth::user();
+    $user_reports->role;
+    return Auth::user()->role;
 });
 
-Route::get('generate-report', function() {
+Route::get('test5', function (){
+    $users = DB::table('users')
+        ->leftJoin('reports', 'users.id', '=', 'reports.user_id')
+//        ->where('reports.created_at', '=', Carbon::yesterday()->toDateString() )
+        ->get();
+//        ->lists('name', 'email');
+    $users->take(1);
+    return response($users);
+//    echo $users;
+});
+Route::get('test', function() {
     $teams = \App\Team::all();
     $teams->load(['members.reports' => function ($query) {
-        $query->wheredate('created_at', '=', Carbon::today()->toDateString());
+        $query->wheredate('created_at', '=', Carbon::yesterday()->toDateString());
     }]);
-    $teams->load(['members.blockers' => function($query){
-        $query->orderBy('created_at', 'desc')->take(1);
-    }]);
-
-    return $teams;
 
     $phpWord = new \PhpOffice\PhpWord\PhpWord();
     $section = $phpWord->addSection();
@@ -111,3 +152,4 @@ Route::get('generate-report', function() {
 
 
 });
+

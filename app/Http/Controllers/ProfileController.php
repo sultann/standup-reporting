@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 class ProfileController extends Controller
 {
@@ -36,14 +37,15 @@ class ProfileController extends Controller
     public function update(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique|max:50',
+            'name' => 'required|max:50',
         ]);
         if ($validator->fails()) {
             return redirect('profile')
                 ->withErrors($validator)
                 ->withInput();
         }
-        
-        User::find($this->user_id)->teams()->sync(2);
+        User::find($this->user_id)->update(['name' => $request->name]);
+        User::find($this->user_id)->teams()->sync($request->Teams);
+        return redirect('/profile');
     }
 }

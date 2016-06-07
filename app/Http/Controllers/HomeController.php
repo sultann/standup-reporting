@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Blocker;
 use App\Http\Requests;
 use App\Team;
 use App\User;
@@ -35,41 +36,63 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return $this->generateReport(Carbon::today());
+    }
+
+    public function filteredReport(Request $request){
+        $date = Carbon::parse($request->dateFilter);
+        return $this->generateReport($date);
+    }
+
+    public function generateReport($date){
 
         if(Auth::user()->role == 'admin'){
-            $reports =  DB::table('reports')->where('task_done', '!==', NULL)->get();
-            return view::make('home-admin')->with('reports', $reports);
+            $teams = Team::all();
+            $teams->load(['members.reports' => function ($query) use($date) {
+                $query->wheredate('created_at', '=', $date);
+            }]);
+//            $teams->load('blockers');
+
+            $lateParties = new User();
+            $lateParties = $lateParties->lastEmptyReport()->get();
+            $blockers = Blocker::all();
+            $blockers->load(['user']);
+
+//            return $blockers;
+            return view::make('homeAdmin')
+                ->with('teams', $teams)
+                ->with('blockers', $blockers)
+                ->with('date', $date)
+                ->with('late_parties', $lateParties);
         }else {
 
-            $report = Auth::user();
-
-//            return $report->reports;
-
-
-            $user_reports = DB::table('reports')
-                ->where('user_id', '=', $this->user_id)
-                ->whereMonth('created_at', '=', date('m'))
-                ->get();
-            $todays_report = DB::table('reports')
-                ->where('user_id', '=', $this->user_id)
-                ->wheredate('created_at', '=', Carbon::today()->toDateString())
-                ->get();
-
-            $last_report = User::find($this->user_id)->reports()->orderBy('created_at', 'desc')->first();
-            $report_updated = $todays_report ? true : false;
-            $user = Auth::user();
-            $user->load(['teams.members.reports' => function ($query) {
-                $query->wheredate('created_at', '=', Carbon::today()->toDateString());
+            /*Generates running months reports*/
+            $userReports = Auth::user();
+            $userReports->load(['reports'=> function ($query) {
+                $query->whereMonth('created_at', '=', date('m'));
+                $query->orderBy('created_at', 'desc');
             }])->get();
 
-//            return $user;
+            $userReports->load(['teams.members.reports']);
+            $userReports->load(['blockers']);
+
+            $todayReport = null;$lastDayTask = null;
+            foreach ($userReports->reports as $key=>$report){
+
+                if($report->created_at->toDateString()== Carbon::today()->toDateString()){
+                    $todayReport = $report;
+                }
+            }
+
+            if(count($userReports->reports)>1){
+                $lastDayTask =  $userReports->reports[count($userReports->reports)-1];
+            }
 
             return view::make('home')
-                ->with('last_report', $last_report)
-                ->with('report_updated', $report_updated)
-                ->with('user', $user);
+                ->with('TodaysReport', $todayReport)
+                ->with('yesterday', $lastDayTask)
+                ->with('user_reports', $userReports);
         }
-
     }
 
 
