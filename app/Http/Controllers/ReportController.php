@@ -23,49 +23,118 @@ class ReportController extends Controller
     }
 
 
-    public function index(User $id){
-        $reports = $id;
-//        $reportsCollection = $reports->reports()->simplePaginate(2);
-//        $reports->load(['blockers' => function ($query) {
-//            $query->orderBy('created_at', 'desc');
-//        }]);
-        $reports->load('reports','teams');
-//        $reports->load();
-        $reports->paginate(15);
-        $reports->reports();
-//         return $reportsCollection;
-        return view::make('individual-person-report')
-            ->with('reports', $reports);
+    public function userReports(User $id){
+        $user = $id;
+        $user_reports = $user
+            ->reports()
+            ->paginate(10);
+        $user_blockers = $user
+            ->blockers()
+            ->paginate(10);
+        $user_teams = $user->teams()->get();
+        return view::make('individual-person-report', [
+            'user'               => $user,
+            'user_reports'       => $user_reports,
+            'user_blockers'      =>  $user_blockers,
+            'user_teams'         =>  $user_teams
+        ]);
     }
 
-    public function teamReport(Team $id){
-        $teamReport = $id;
-        $teamReport->load('members.reports');
-        return $teamReport;
-//        return view::make('individual-team-report')
-//            ->with('teamReports', $teamReport);
+    public function teamReports(Team $team_id){
+
+        $team_member_ids = $team_id->members()->pluck('id');
+        $team_reports = Report::with('user')
+            ->whereIn('user_id', $team_member_ids)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        $team_members = $team_id->members()->get();
+        return view::make('individual-team-report', [
+            'team_reports' => $team_reports,
+            'team_members'    => $team_members,
+            'team'    => $team_id,
+        ]);
+
     }
 
     public function filteredReports(Request $request){
         $date = Carbon::parse($request->dateFilter);
-
-//        $reports =  DB::table('reports')
-//            ->where('created_at', '=', $date)
-//            ->get();
-//        $reports->load('users');
 
         $reports = \App\User::all();
         $reports->load(['reports' =>function ($query) use($date) {
             $query->where('created_at', '=', $date);
             $query->orderBy('created_at', 'desc');
         }]);
-
-
-//            $reports->load(['reports'=> function ($query) {
-//            $query->whereMonth('created_at', '=', date('m'));
-//            $query->orderBy('created_at', 'desc');
-//        }])->get();
         return $reports;
+
+    }
+
+
+    public function generateTodayDocReport(){
+        if(Auth::user()->role !== 'admin') return redirect('/login');
+        return $this->generateDocReport(Carbon::today()->toDateString());
+    }
+    
+    
+    public function generateCustomDocReport($date){
+        if(Auth::user()->role !== 'admin') return redirect('/login');
+
+        return $this->generateDocReport($date);
+    }
+
+    public function generateDocReport($date){
+        if($date == null){
+            $date = Carbon::today()->toDateString();
+        }else{
+            $date = Carbon::parse($date)->toDateString();
+        }
+        if(Auth::user()->role !== 'admin') return redirect('/login');
+        $teams = \App\Team::all();
+        $teams->load(['members.reports' => function ($query) use($date){
+            $query->wheredate('created_at', '=', $date);
+        }]);
+
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection();
+        $header = array('size' => 16, 'bold' => true,'alignment' => 'center');
+        $reportHeader = 'StandUp Report for the day of '. date('jS F, Y');
+        $section->addText(htmlspecialchars($reportHeader, ENT_COMPAT, 'UTF-8'), $header);
+        $lineStyle = array('weight' => 1, 'width' => 300, 'height' => 0, 'color' => 635552);
+        $section->addLine($lineStyle);
+        foreach ($teams as $team){
+            $section->addTextBreak(3);
+            $section->addText(htmlspecialchars($team->team_name, ENT_COMPAT, 'UTF-8'), $header);
+            $styleTable = array('borderSize' => 1, 'borderColor' => '000', 'cellMargin' => 80, 'alignment' => 'center');
+            $styleFirstRow = array('borderBottomSize' => 2, 'borderBottomColor' => '000');
+            $styleCell = array('valign' => 'center','alignment' => 'center');
+            $fontStyle = array('bold' => true);
+            $phpWord->addTableStyle('Team Table', $styleTable, $styleFirstRow);
+            $table = $section->addTable('Team Table');
+            $table->addRow(900);
+            $table->addCell(3000, $styleCell)->addText(htmlspecialchars('Name', ENT_COMPAT, 'UTF-8'), $fontStyle);
+            $table->addCell(6000, $styleCell)->addText(htmlspecialchars('Task Done', ENT_COMPAT, 'UTF-8'), $fontStyle);
+            foreach ($team->members as $team_member){
+                $table->addRow();
+                $table->addCell(3000)->addText(htmlspecialchars($team_member->name, ENT_COMPAT, 'UTF-8'));
+                if(count($team_member->reports->toArray())>0){
+                    foreach ($team_member->reports as $report){
+                        $table->addCell(6000)->addText(htmlspecialchars($report->task_done, ENT_COMPAT, 'UTF-8'));
+                    }
+                }else{
+                    $table->addCell(6000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
+                }
+            }
+        }
+        $parentFolder = date('Y');
+        $childFolder = date('M');
+        $fileName   = 'Reports-'. date('d-m-y').'.docx';
+        $dirStrucre = './'.$parentFolder.'/'.$childFolder.'/';
+        if(!is_dir($dirStrucre)){
+            mkdir("./".$parentFolder.'/'.$childFolder,  0777, true);
+        }
+
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter->save($dirStrucre.'/'.$fileName);
+        return redirect('/'.$parentFolder.'/'.$childFolder.'/'.$fileName);
 
     }
 
@@ -97,7 +166,7 @@ class ReportController extends Controller
             $lastDayReport = $lastDayReport[0];
             DB::table('reports')
                 ->where('id', $lastDayReport->id)
-                ->update(['task_done' => $request->task_done_last_day]);
+                ->update(['task_done' => $request->task_done_last_day,'updated_at' => Carbon::now()]);
         }
 
         if(isset($request->blocker) && !empty($request->blocker)){

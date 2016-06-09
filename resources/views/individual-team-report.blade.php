@@ -5,31 +5,33 @@
         <div class="row">
             <div class="col-md-8">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Detail StandUp Reports for <b>{{$teamReports->team_name}}</b></div>
-
+                        <div class="panel-heading">Detail StandUp Reports for <b>{{$team->team_name}}</b></div>
                         <div class="panel-body">
-                            @if(count($teamReports->reports)>0)
-                            <table class="table table-condensed">
-                                <thead>
-                                <tr>
-                                    <th style="width: 33%;">Date</th>
-                                    <th style="width: 33%;">Report</th>
-                                </tr>
-                                </thead>
-                                {{--{{dd($reports)}}--}}
-                                @foreach($reports->reports as $report)
-                                    <tr>
-                                        <td>
-                                            {{$report->created_at->format('l jS F, Y')}}
-                                        </td>
-                                        <td>
-                                            {{$report->task_done}}
-                                        </td>
+                            @if(count($team_reports)>0)
+                                <?php $date = 'test'; ?>
+                                <table class="table table-bordered table-striped">
+                                    @foreach($team_reports as $report)
+                                        @if($date != $report->created_at->format('d'))
+                                            {{--{{$date}}--}}
+                                        <tr>
+                                            <th colspan="3" class="person-name">{{$report->created_at->format('l jS F, Y')}}</th>
+                                        </tr>
+                                        {{--<tr>--}}
+                                            {{--<th class="person-name">Name</th>--}}
+                                            {{--<th class="person-task">Task</th>--}}
+                                        {{--</tr>--}}
 
-                                    </tr>
-                                @endforeach
-                                {{--{{dd($reports->links())}}--}}
-                            </table>
+                                        @endif
+                                        <tr>
+                                            <td class="person-name"><a href="/report/user/{{$report->user->id}}">{{$report->user->name}}</a></td>
+                                            <td class="person-task">
+                                                {{$report->task_done}}
+                                            </td>
+                                        </tr>
+                                            <?php $date = $report->created_at->format('d'); ?>
+                                        @endforeach
+                                </table>
+                                {{$team_reports->links()}}
                             @else
                                 <p>No Report found for the user</p>
                             @endif
@@ -42,59 +44,22 @@
             <div class="col-md-4">
                 <div class="widget">
                     <div class="panel panel-default">
-                        <div class="panel-heading">User Details</div>
+                        <div class="panel-heading">Team Details</div>
                         <div class="panel-body">
 
-                            <dl class="dl-horizontal">
-                                <dt>Name</dt>
-                                <dd>{{$reports->name}}</dd>
-                                <dt>Associated with</dt>
-                                @foreach($reports->teams as $team)
-                                <dd>{{$team->team_name}}</dd>
+                            <dl>
+                                <dt>Name:</dt>
+                                <dd style="padding-left: 20px;margin-bottom:10px; ">{{$team->team_name}}</dd>
+                                <dt>Team Members:</dt>
+                                @foreach($team_members as $member)
+                                <dd style="padding-left: 20px;"><i class="fa fa-user" aria-hidden="true"></i>  {{$member->name}}</dd>
                                  @endforeach
                             </dl>
                         </div>
                     </div>
                 </div>
-                {{--<div class="widget">--}}
-                    {{--<div class="panel panel-default blockers">--}}
-                        {{--<div class="panel-heading">Blockers Opened by the User</div>--}}
 
-                        {{--<div class="panel-body">--}}
-                            {{--@if(count($reports->blockers)>0)--}}
-                                {{--<ul class="blockers admin-blockers">--}}
-                                {{--@foreach($reports->blockers as $blocker)--}}
-                                {{--<li class="blocker-item">--}}
-                                {{--<div class="blocker">--}}
-                                {{--{{$blocker->blocker}}--}}
-                                {{--</div>--}}
-                                {{--<div class="blocker-meta">--}}
-                                {{--<span class="opened">--}}
-                                {{--{{$blocker->created_at}}--}}
-                                {{--</span>--}}
-                                {{--<span class="blocker-status">--}}
-                                {{--@if($blocker->status == 1)--}}
-                                {{--<span class="label label-danger">Open</span>--}}
-                                {{--<span><a href="/blocker/{{$blocker->id}}/resolve"><i--}}
-                                {{--class="fa fa-check-circle"--}}
-                                {{--aria-hidden="true"></i></a></span>--}}
-                                {{--@else--}}
-                                {{--<span class="label label-success">Resolved</span>--}}
-                                {{--@endif--}}
-                                {{--</span>--}}
-
-                                {{--</div>--}}
-                                {{--</li>--}}
-                                {{--@endforeach--}}
-                                {{--</ul>--}}
-                            {{--@else--}}
-                                {{--<b>No blocker found for the user</b>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
-            {{--</div>--}}
+            </div>
         </div>
     </div>
     </div>

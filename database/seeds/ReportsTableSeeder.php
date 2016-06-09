@@ -16,7 +16,7 @@ class ReportsTableSeeder extends Seeder
         $users = \App\User::all();;
         $faker = Faker\Factory::create();
         foreach ($users as $users){
-        for ($i=1; $i<7; $i++){
+        for ($i=1; $i<35; $i++){
             if($i == 1){
                 $time = \Carbon\Carbon::parse('today');
             }else{
@@ -24,8 +24,9 @@ class ReportsTableSeeder extends Seeder
             }
             $report = \App\Report::create([
                 'user_id' => $users->id,
-                'task_done' => $faker->text(250),
-                'created_at'    => $time
+                'task_done' => $faker->text($faker->numberBetween(100, 150)),
+                'created_at'    => $time,
+                'updated_at'    => $time
             ]);
             }
 

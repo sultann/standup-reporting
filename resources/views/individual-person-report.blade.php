@@ -5,31 +5,30 @@
         <div class="row">
             <div class="col-md-8">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Detail StandUp Reports for <b>{{$reports->name}}</b></div>
+                        <div class="panel-heading">Detail Stand Up Reports of <b>{{$user->name}}</b></div>
 
                         <div class="panel-body">
-                            @if(count($reports->reports)>0)
-                            <table class="table table-condensed">
+                            @if(count($user_reports)>0)
+                            <table class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th style="width: 33%;">Date</th>
-                                    <th style="width: 33%;">Report</th>
+                                    <th class="person-name">Date</th>
+                                    <th class="person-task">Report</th>
                                 </tr>
                                 </thead>
-                                {{--{{dd($reports)}}--}}
-                                @foreach($reports->reports as $report)
+                                @foreach($user_reports as $report)
                                     <tr>
-                                        <td>
+                                        <td class="v-middle text-center">
                                             {{$report->created_at->format('l jS F, Y')}}
                                         </td>
-                                        <td>
+                                        <td class="v-middle">
                                             {{$report->task_done}}
                                         </td>
 
                                     </tr>
                                 @endforeach
-                                {{--{{dd($reports->links())}}--}}
                             </table>
+                                <div class="center-block"> {{$user_reports->links()}}</div>
                             @else
                                 <p>No Report found for the user</p>
                             @endif
@@ -47,10 +46,10 @@
 
                             <dl class="dl-horizontal">
                                 <dt>Name</dt>
-                                <dd>{{$reports->name}}</dd>
+                                <dd><i class="fa fa-user" aria-hidden="true"></i> {{$user->name}}</dd>
                                 <dt>Associated with</dt>
-                                @foreach($reports->teams as $team)
-                                <dd>{{$team->team_name}}</dd>
+                                @foreach($user_teams as $team)
+                                <dd><i class="fa fa-check" aria-hidden="true"></i> {{$team->team_name}}</dd>
                                  @endforeach
                             </dl>
                         </div>
@@ -61,9 +60,9 @@
                         <div class="panel-heading">Blockers Opened by the User</div>
 
                         <div class="panel-body">
-                            @if(count($reports->blockers)>0)
-                                <ul class="blockers admin-blockers">
-                                @foreach($reports->blockers as $blocker)
+                            @if(count($user_blockers)>0)
+                                <ol class="blockers admin-blockers">
+                                @foreach($user_blockers as $blocker)
                                 <li class="blocker-item">
                                 <div class="blocker">
                                 {{$blocker->blocker}}
@@ -86,7 +85,7 @@
                                 </div>
                                 </li>
                                 @endforeach
-                                </ul>
+                                </ol>
                             @else
                                 <b>No blocker found for the user</b>
                             @endif

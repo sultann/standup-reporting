@@ -45,7 +45,7 @@ class ProfileController extends Controller
                 ->withInput();
         }
         User::find($this->user_id)->update(['name' => $request->name]);
-        User::find($this->user_id)->teams()->sync($request->Teams);
+        User::find($this->user_id)->teams()->sync($request->teams);
         return redirect('/profile');
     }
 }

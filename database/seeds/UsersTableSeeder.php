@@ -12,7 +12,6 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->delete();
-//        factory('App\User', 50)->create();
         $faker = Faker\Factory::create();
         for ($i = 0; $i < 80; $i++) {
             $user = \App\User::create(
@@ -23,7 +22,7 @@ class UsersTableSeeder extends Seeder
                     'remember_token' => str_random(10),
                 ]
             );
-            $user->teams()->sync([$faker->numberBetween(1,14), $faker->numberBetween(1,14)]);
+            $user->teams()->sync([$faker->numberBetween(1,11), $faker->numberBetween(1,11)]);
         }
 
     }

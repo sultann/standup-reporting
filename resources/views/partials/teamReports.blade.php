@@ -11,6 +11,12 @@
                     <tr>
                         <td>{{$member->name}}</td>
                         @if(count($member->reports)>0)
+                            {{--{{$member->reports[0]}}--}}
+                            {{--if($report->created_at->toDateString()== Carbon::today()->toDateString()){--}}
+                            {{--$todayReport = $report;--}}
+                            {{--}--}}
+
+                            {{--<td>{{$member->reports[0]->created_at->toDateString()}}</td>--}}
                             <td>{{$member->reports[0]->task_done}}</td>
                         @else
                             <td>X</td>

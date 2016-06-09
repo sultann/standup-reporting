@@ -9,20 +9,17 @@ class TeamsTableSeeder extends Seeder
      * @return void
      */
     protected $teams = array(
-        'Web Designer',
-        'Front End Developer',
-        'UI Designer',
-        'UX Designer',
-        'Interaction Designer',
-        'Art Director',
-        'Web Developer',
-        'Full Stack Developer',
-        'Content Strategist',
-        'IT Technician',
-        'Dev Ops',
-        'Product Manager',
-        'Customer Service Representative',
-        'SEO Specialist'
+        'Admin',
+        'Scrum Team & Documentation Team',
+        'Dev Team',
+        'DevOps/SecOps Team',
+        'Android & iOS Team',
+        'QA Team',
+        'Game Team',
+        'Frontend Team',
+        'Design Team',
+        'Business Team and Content Writer Team',
+        'Admin & HR'
     );
     public function run()
     {

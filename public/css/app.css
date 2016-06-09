@@ -5751,4 +5751,47 @@ button.close {
   font-size: 14px;
   color: #000 !important; }
 
+.show-more-blockers {
+  font-weight: 700;
+  color: red; }
+
+th.table-header {
+  vertical-align: middle !important;
+  transform: rotate(270deg);
+  overflow: visible;
+  height: 170px !important;
+  text-align: center;
+  width: 100px; }
+
+.inside-table {
+  padding: 0; }
+
+.person-name {
+  width: 200px;
+  text-align: center;
+  vertical-align: middle !important; }
+
+.person-task {
+  text-align: center; }
+
+.v-middle {
+  vertical-align: middle !important; }
+
+.pagination {
+  display: table;
+  margin: 0 auto; }
+
+a.generate-report-btn {
+  background: red;
+  color: #fff !important;
+  padding: 7px 10px !important;
+  margin: 8px;
+  border-radius: 5px; }
+  a.generate-report-btn:hover {
+    background: #cc0000 !important;
+    color: #fff !important; }
+
+.navbar-brand {
+  font-weight: 900; }
+
 /*# sourceMappingURL=app.css.map */

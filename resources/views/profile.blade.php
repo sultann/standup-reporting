@@ -21,7 +21,7 @@
                     @else
                         No
                     @endif
-                    <select name="Teams[]" id="" class="form-control" multiple>
+                    <select name="teams[]" id="" class="form-control" multiple>
                     @foreach($teams as $team)
                             <option value="{{$team->id}}" {{in_array($team->id, $user_teams, true)? 'selected': false}}>{{$team->team_name}}</option>
                     @endforeach

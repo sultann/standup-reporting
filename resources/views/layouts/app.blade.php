@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>GG StandUp</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.css">
@@ -27,7 +27,7 @@
     </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-default navbar-static-top top-nav">
         <div class="container">
             <div class="navbar-header">
 
@@ -41,7 +41,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    GG StanUp
+                    GG StandUp
                 </a>
             </div>
 
@@ -66,6 +66,9 @@
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                             </ul>
                         </li>
+                        @if(Auth::user()->role == 'admin')
+                            <li class="generate-report"><a href="/generate-report" target="_blank" class="generate-report-btn">Generate Report</a></li>
+                        @endif
                     @endif
                 </ul>
             </div>
@@ -76,9 +79,9 @@
 
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
-    <script src="/js/moment.js"></script>
-    <script src="/js/bootstrap-datetimepicker.js"></script>
+    <script src="{{URL::to('/')}}/js/moment.js"></script>
+    <script src="{{URL::to('/')}}/js/bootstrap-datetimepicker.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-     <script src="js/app.js"></script>
+     <script src="{{URL::to('/')}}/js/app.js"></script>
 </body>
 </html>

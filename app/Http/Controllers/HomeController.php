@@ -55,11 +55,14 @@ class HomeController extends Controller
 
             $lateParties = new User();
             $lateParties = $lateParties->lastEmptyReport()->get();
-            $blockers = Blocker::all();
-            $blockers->load(['user']);
+            $blockers = Blocker::with('user')
+                ->where('status', '=', 1)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
 //            return $blockers;
-            return view::make('homeAdmin')
+
+            return view::make('home-admin')
                 ->with('teams', $teams)
                 ->with('blockers', $blockers)
                 ->with('date', $date)
@@ -73,7 +76,10 @@ class HomeController extends Controller
                 $query->orderBy('created_at', 'desc');
             }])->get();
 
-            $userReports->load(['teams.members.reports']);
+            $userReports->load(['teams.members.reports' =>function ($query) {
+                            $query->whereDate('created_at', '=', Carbon::today());
+                            $query->orderBy('created_at', 'desc');
+                        }])->get();
             $userReports->load(['blockers']);
 
             $todayReport = null;$lastDayTask = null;
@@ -87,10 +93,12 @@ class HomeController extends Controller
             if(count($userReports->reports)>1){
                 $lastDayTask =  $userReports->reports[count($userReports->reports)-1];
             }
+//            return $userReports->reports;
 
-            return view::make('home')
+//            return Auth::user()->lastReport()->get();
+            return view::make('home-user')
                 ->with('TodaysReport', $todayReport)
-                ->with('yesterday', $lastDayTask)
+                ->with('yesterday', Auth::user()->lastReport()->get())
                 ->with('user_reports', $userReports);
         }
     }
