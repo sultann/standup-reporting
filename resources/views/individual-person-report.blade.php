@@ -74,7 +74,7 @@
                                 <span class="blocker-status">
                                 @if($blocker->status == 1)
                                 <span class="label label-danger">Open</span>
-                                <span><a href="/blocker/{{$blocker->id}}/resolve"><i
+                                <span><a href="/blocker/resolve/{{$blocker->id}}"><i
                                 class="fa fa-check-circle"
                                 aria-hidden="true"></i></a></span>
                                 @else
