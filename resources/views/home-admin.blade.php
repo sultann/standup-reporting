@@ -64,6 +64,7 @@
             <div class="col-md-4">
             @include('partials.not-reported-list')
             @include('partials.blocker-list')
+            @include('partials.reporting-form')
 
 
             </div>

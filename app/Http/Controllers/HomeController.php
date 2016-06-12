@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Blocker;
 use App\Http\Requests;
+use App\Report;
 use App\Team;
 use App\User;
 use Carbon\Carbon;
@@ -51,7 +52,6 @@ class HomeController extends Controller
             $teams->load(['members.reports' => function ($query) use($date) {
                 $query->wheredate('created_at', '=', $date);
             }]);
-//            $teams->load('blockers');
 
             $lateParties = new User();
             $lateParties = $lateParties->lastEmptyReport()->get();
@@ -60,13 +60,20 @@ class HomeController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-//            return $blockers;
+            $todayReport = null;$lastDayTask = null;
+            $todayReport = Auth::user()
+                ->reports()
+                ->whereDate('created_at', '=', Carbon::today()->toDateString())
+                ->first();
+//            return $todayReport;
 
             return view::make('home-admin')
                 ->with('teams', $teams)
                 ->with('blockers', $blockers)
                 ->with('date', $date)
-                ->with('late_parties', $lateParties);
+                ->with('TodaysReport', $todayReport)
+                ->with('late_parties', $lateParties)
+                ->with('yesterday', Auth::user()->lastReport()->get())  ;
         }else {
 
             /*Generates running months reports*/
@@ -93,9 +100,7 @@ class HomeController extends Controller
             if(count($userReports->reports)>1){
                 $lastDayTask =  $userReports->reports[count($userReports->reports)-1];
             }
-//            return $userReports->reports;
 
-//            return Auth::user()->lastReport()->get();
             return view::make('home-user')
                 ->with('TodaysReport', $todayReport)
                 ->with('yesterday', Auth::user()->lastReport()->get())

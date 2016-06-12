@@ -56,7 +56,7 @@ class User extends Authenticatable
     {
         return $this->whereDoesntHave('reports', function ($q){
             return $q->wheredate('created_at', '=', Carbon::today()->toDateString());
-        }); // Order it by anything you want
+        });
     }
     
 }
