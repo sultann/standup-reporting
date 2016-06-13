@@ -8,7 +8,6 @@
                 <img src="/images/avatar.png" alt="" class="img-responsive">
             </div>
             <div class="col-md-6 col-md-offset-1">
-                <form action="/profile/update" method="post">
                     {!! Form::open(array('url' => 'profile/update')) !!}
                 <div class="form-group">
                     <label for="">Name:</label>
@@ -21,7 +20,7 @@
                     @else
                         No
                     @endif
-                    <select name="teams[]" id="" class="form-control" multiple>
+                    <select name="teams[]" id="" class="form-control team-selection" multiple>
                     @foreach($teams as $team)
                             <option value="{{$team->id}}" {{in_array($team->id, $user_teams, true)? 'selected': false}}>{{$team->team_name}}</option>
                     @endforeach

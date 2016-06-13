@@ -20,7 +20,7 @@ Route::get('report/create', 'ReportController@create');
 Route::post('report/store', 'ReportController@store');
 Route::get('report/user/{id}', 'ReportController@userReports');
 Route::get('report/team/{team_id}', 'ReportController@teamReports');
-Route::get('generate-report', 'ReportController@generateTodayDocReport');
+Route::get('/generate-report', 'ReportController@generateTodayDocReport');
 Route::get('generate-report/{date}', 'ReportController@generateCustomDocReport');
 
 Route::get('profile', 'ProfileController@index');
@@ -29,15 +29,5 @@ Route::post('profile/update', 'ProfileController@update');
 
 Route::get('/blocker/resolve/{id}', 'BlockerController@resolveBlocker');
 
-Route::get('mail-test', function () {
-
-    $user = \App\User::findOrFail(1);
-
-    Mail::send('greeting', ['user' => $user], function ($m) use ($user) {
-        $m->from('sultan.nasir@gagagugu.com', 'Your Application');
-
-        $m->to('tapos.aa@gmail.com', $user->name)->subject('Your Reminder!');
-    });
-});
 
 

@@ -72,6 +72,7 @@ class ReportController extends Controller
 
     public function generateTodayDocReport(){
         if(Auth::user()->role !== 'admin') return redirect('/login');
+
         return $this->generateDocReport(Carbon::today()->toDateString());
     }
     
@@ -97,7 +98,7 @@ class ReportController extends Controller
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWord->addSection();
         $header = array('size' => 16, 'bold' => true,'alignment' => 'center');
-        $reportHeader = 'StandUp Report for the day of '. date('jS F, Y');
+        $reportHeader = 'StandUp Report for the day of '. Carbon::parse($date)->format('jS F, Y');
         $section->addText(htmlspecialchars($reportHeader, ENT_COMPAT, 'UTF-8'), $header);
         $lineStyle = array('weight' => 1, 'width' => 300, 'height' => 0, 'color' => 635552);
         $section->addLine($lineStyle);

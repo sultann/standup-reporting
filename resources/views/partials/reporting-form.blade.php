@@ -12,7 +12,7 @@
 
 
         <div class="form-group">
-            {!! Form::label('task_done', 'What you you will do today?') !!}
+            {!! Form::label('task_done', 'What you will do today?') !!}
             {!! Form::textarea('task_done', isset($TodaysReport->task_done)?$TodaysReport->task_done:null, ['class' => 'form-control', 'cols' => '30', 'rows' => '5', 'required']) !!}
         </div>
 
