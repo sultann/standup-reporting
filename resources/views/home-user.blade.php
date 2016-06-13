@@ -14,7 +14,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Update Your StandUp for today</div>
                     <div class="panel-body">
-                        {!! Form::open(array('url' => 'report/store', 'novalidate' =>'')) !!}
+                        {!! Form::open(array('url' => 'report/store')) !!}
 
                         @if((count($yesterday)>0) && ($yesterday[0]->updated_at->format('d') == $yesterday[0]->created_at->format('d')))
                         <div class="form-group">

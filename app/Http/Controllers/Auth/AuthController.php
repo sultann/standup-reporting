@@ -63,7 +63,8 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'teams'   => 'required'
+            'teams'   => 'required',
+            'captcha' => 'required|in:Puri,puri'
         ]);
     }
 
@@ -75,6 +76,7 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
+//            if($data['captcha'] !== 'Puri' )  return redirect('/register');
             $user = new User();
             $user->name      = $data['name'];
             $user->email     = $data['email'];

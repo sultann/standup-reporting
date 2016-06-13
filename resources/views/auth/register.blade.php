@@ -56,6 +56,19 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Whats the favourite food of P1?</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="captcha">
+
+                                @if ($errors->has('captcha'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('captcha') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Password</label>
