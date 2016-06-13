@@ -24,6 +24,7 @@ class ReportController extends Controller
 
 
     public function userReports(User $id){
+        if(Auth::user()->role !== 'admin') return redirect('/login');
         $user = $id;
         $user_reports = $user
             ->reports()
@@ -41,7 +42,7 @@ class ReportController extends Controller
     }
 
     public function teamReports(Team $team_id){
-
+        if(Auth::user()->role !== 'admin') return redirect('/login');
         $team_member_ids = $team_id->members()->pluck('id');
         $team_reports = Report::with('user')
             ->whereIn('user_id', $team_member_ids)

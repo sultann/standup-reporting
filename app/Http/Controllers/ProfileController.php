@@ -28,7 +28,6 @@ class ProfileController extends Controller
         $user = \Auth::user();
         $user->load('teams');
         $user_teams = $user->load('teams')->teams()->get()->lists('id')->toArray();
-//        return $user_teams;
         return view::make('profile')->with('user', $user)->with('user_teams', $user_teams)->with('teams', $teams);
     }
     
