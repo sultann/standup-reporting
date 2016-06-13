@@ -17,7 +17,7 @@
                             {{--}--}}
 
                             {{--<td>{{$member->reports[0]->created_at->toDateString()}}</td>--}}
-                            <td>{{$member->reports[0]->task_done}}</td>
+                            <td>{!! $member->reports[0]->task_done !!}</td>
                         @else
                             <td>X</td>
                         @endif

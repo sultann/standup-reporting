@@ -14,7 +14,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Update Your StandUp for today</div>
                     <div class="panel-body">
-                        {!! Form::open(array('url' => 'report/store')) !!}
+                        {!! Form::open(array('url' => 'report/store', 'novalidate' =>'')) !!}
 
                         @if((count($yesterday)>0) && ($yesterday[0]->updated_at->format('d') == $yesterday[0]->created_at->format('d')))
                         <div class="form-group">
@@ -31,7 +31,7 @@
 
                         <div class="form-group">
                             {!! Form::label('blocker', 'Any Blocker?') !!}
-                            {!! Form::textarea('blocker', null, ['class' => 'form-control', 'cols' => '30', 'rows' => '2']) !!}
+                            {!! Form::textarea('blocker', null, ['class' => 'form-control', 'cols' => '30', 'rows' => '2', 'placeholder' =>'Leave empty for no blocker']) !!}
                         </div>
 
 
