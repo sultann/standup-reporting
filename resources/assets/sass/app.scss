@@ -71,7 +71,7 @@
    vertical-align: middle !important;
  }
  .person-task{
-   text-align: center;
+   text-align: left;
  }
  .v-middle{
    vertical-align: middle !important;
@@ -101,4 +101,8 @@
  }
  .team-selection{
    height: 350px !important;
+   }
+
+ .blocker-area{
+   display: none;
    }

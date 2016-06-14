@@ -22,7 +22,7 @@
                                             {{$report->created_at->format('l jS F, Y')}}
                                         </td>
                                         <td class="v-middle">
-                                            {{$report->task_done}}
+                                           {!! $report->task_done !!}
                                         </td>
 
                                     </tr>

@@ -41,7 +41,8 @@ class HomeController extends Controller
     }
 
     public function filteredReport(Request $request){
-        $date = Carbon::parse($request->dateFilter);
+        $date = Carbon::parse($request->dateFilter)->toDateString();
+//        return $date;
         return $this->generateReport($date);
     }
 

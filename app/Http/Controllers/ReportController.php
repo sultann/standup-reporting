@@ -146,6 +146,7 @@ class ReportController extends Controller
     public function store(Request $request){
         // @todo have to validate the form
 
+//        return $request->all();
         $todaysReport = null;
         $lastDayReport= null;
         $user = User::find(Auth::user()->id);
@@ -171,7 +172,7 @@ class ReportController extends Controller
                 ->update(['task_done' => $request->task_done_last_day,'updated_at' => Carbon::now()]);
         }
 
-        if(isset($request->blocker) && !empty($request->blocker)){
+        if($request->add_blocker == 'yes' && !empty($request->blocker )){
                 $blocker = new Blocker();
                 $blocker->user_id = $user->id;
                 $blocker->blocker = $request->blocker;

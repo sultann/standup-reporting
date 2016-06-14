@@ -25,7 +25,7 @@
                                         <tr>
                                             <td class="person-name"><a href="/report/user/{{$report->user->id}}">{{$report->user->name}}</a></td>
                                             <td class="person-task">
-                                                {{$report->task_done}}
+                                             {!! $report->task_done !!}
                                             </td>
                                         </tr>
                                             <?php $date = $report->created_at->format('d'); ?>

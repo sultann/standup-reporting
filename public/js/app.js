@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
         maxDate : moment(),
         // defaultDate: moment(),
         daysOfWeekDisabled: [5, 6],
-        format: 'DD/MM/YYYY'
+        // format: 'DD/MM/YYYY'
     });
 
     var totalBlockers = $('.late-reported-list li');
@@ -18,5 +18,23 @@ jQuery(document).ready(function ($) {
         totalBlockers.eq(9).nextAll('li').hide();
         button.insertAfter(totalBlockers.eq(9));
     }
+
+
+
+    $('.add-blocker').on('change', function () {
+        var val = $(this).val();
+        console.log(val);
+      if(val == 'yes'){
+              $('.blocker-area').slideDown('fast');
+      }else{
+          $('.blocker-area').slideUp('fast');
+      }
+    });
+
+
+
+
+
+
 
 });

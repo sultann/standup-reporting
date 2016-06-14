@@ -5772,7 +5772,7 @@ th.table-header {
   vertical-align: middle !important; }
 
 .person-task {
-  text-align: center; }
+  text-align: left; }
 
 .v-middle {
   vertical-align: middle !important; }
@@ -5796,5 +5796,7 @@ a.generate-report-btn {
 
 .team-selection {
   height: 350px !important; }
-
+.blocker-area{
+  display: none;
+  }
 /*# sourceMappingURL=app.css.map */

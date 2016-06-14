@@ -83,5 +83,28 @@
     <script src="{{URL::to('/')}}/js/bootstrap-datetimepicker.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
      <script src="{{URL::to('/')}}/js/app.js"></script>
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
+    <script>
+
+var ckEditorID;
+
+ckEditorID = ['task_done', 'task_done_last_day'];
+ckEditorID.forEach(function (a) {
+    CKEDITOR.config.forcePasteAsPlainText = true;
+    CKEDITOR.replace( a,
+            {
+                toolbar :
+                        [
+                            {
+                                items : [ 'Bold','Italic','Underline']
+                            },
+                            {
+                                items : [ 'BulletedList','NumberedList']
+                            }
+                        ]
+            })
+});
+    </script>
 </body>
 </html>

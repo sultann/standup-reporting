@@ -10,7 +10,8 @@
         "laravelcollective/html": "^5.2",
         "barryvdh/laravel-debugbar": "^2.2",
         "phpoffice/phpword": "^0.12.1",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "unisharp/laravel-ckeditor": "^4.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

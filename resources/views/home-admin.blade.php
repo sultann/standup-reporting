@@ -45,7 +45,7 @@
                                             <tr>
                                                 <td class="person-name"><a href="report/user/{{$member->id}}">{{$member->name}}</a></td>
                                                 <td class="person-task">   @if(isset($member->reports[0]))
-                                                        {{$member->reports[0]->task_done}}
+                                                        {!! $member->reports[0]->task_done !!}
                                                     @else
                                                         X
                                                     @endif
