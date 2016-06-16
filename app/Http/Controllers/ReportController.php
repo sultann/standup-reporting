@@ -119,7 +119,7 @@ class ReportController extends Controller
                 $table->addCell(3000)->addText(htmlspecialchars($team_member->name, ENT_COMPAT, 'UTF-8'));
                 if(count($team_member->reports->toArray())>0){
                     foreach ($team_member->reports as $report){
-                        $table->addCell(6000)->addText(htmlspecialchars(strip_tags($report->task_done), ENT_COMPAT, 'UTF-8'));
+                        $table->addCell(6000)->addText(html_entity_decode(htmlspecialchars(strip_tags($report->task_done), ENT_COMPAT, 'UTF-8')));
                     }
                 }else{
                     $table->addCell(6000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
