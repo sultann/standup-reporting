@@ -34,4 +34,16 @@ Route::get('test', function(){
 }) ;
 
 
+Route::get('/test', function(){
+	$doc = new VsWord();
+	$paragraph = new PCompositeNode();
+	$paragraph->addPNodeStyle( new AlignNode(AlignNode::TYPE_RIGHT) );
+	$paragraph->addText("Some more text ... More text about... Some more text ... More text about... Some more text ... More text about...");
+	/**/
+	echo '<pre>'.($doc->getDocument()->getBody()->look()).'</pre>';
+
+	$doc->saveAs('align.docx');
+});
+
+
 

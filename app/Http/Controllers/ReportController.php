@@ -13,7 +13,6 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
-
 use App\lib\Html2Text;
 
 class ReportController extends Controller
@@ -74,7 +73,7 @@ class ReportController extends Controller
 
     public function generateTodayDocReport(){
         if(Auth::user()->role !== 'admin') return redirect('/login');
-
+        if(Auth::user()->role !== 'admin') return redirect('/login');
         return $this->generateDocReport(Carbon::today()->toDateString());
     }
     
@@ -97,9 +96,7 @@ class ReportController extends Controller
             $query->wheredate('created_at', '=', $date);
         }]);
 
-//        return $teams;
-
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $phpWord = new PhpWord();
         $section = $phpWord->addSection();
         $header = array('size' => 16, 'bold' => true,'alignment' => 'center');
         $reportHeader = 'StandUp Report for the day of '. Carbon::parse($date)->format('jS F, Y');
@@ -127,6 +124,9 @@ class ReportController extends Controller
                         $html = new Html2Text($report->task_done);
                         $task = $html->getText();
                         $table->addCell(6000)->addText(htmlspecialchars($task, ENT_COMPAT, 'UTF-8'), $fontStyle);
+
+                        $table->addCell(6000)->addText(trim(htmlspecialchars(strip_tags($report->task_done), ENT_COMPAT, 'UTF-8')));
+
                     }
                 }else{
                     $table->addCell(6000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
