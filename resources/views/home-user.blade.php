@@ -1,18 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    {{--{{dd($report_updated)}}--}}
     <div class="container">
         <div class="row">
             <div class="col-md-8">
+                @include('partials.reporting-form')
                 @include('partials/teamReports')
                 @include('partials/user-current-month-report')
-
             </div>
             <div class="col-md-4">
-
-                @include('partials.reporting-form')
-
                     <div class="widget">
                         <div class="panel panel-default">
                             <div class="panel-heading">Blockers</div>
@@ -29,7 +25,7 @@
                                                          class="fa fa-check-circle"
                                                          aria-hidden="true"></i></a></span>
                                      @else
-                                         <span class="label label-success">Resolved</span>
+                                         <span class="label success-class label-success">Resolved</span>
                                      @endif
                                  </li>
                              @endforeach
@@ -41,9 +37,5 @@
             </div>
         </div>
     </div>
-
-
-
-    {{--{{var_export($user_team)}}--}}
 
 @endsection

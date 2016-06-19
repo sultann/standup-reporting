@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
-use App\lib\vsword\VsWord;
+use App\lib\Html2Text;
 
 class ReportController extends Controller
 {
@@ -73,60 +73,9 @@ class ReportController extends Controller
 
 
     public function generateTodayDocReport(){
+        if(Auth::user()->role !== 'admin') return redirect('/login');
 
-        $doc = new VsWord();
-        $body = $doc->getDocument()->getBody();
-
-        $table = new TableCompositeNode();
-        $body->addNode($table);
-        $style = new TableStyle(1);
-        $table->setStyle($style);
-        $doc->getStyle()->addStyle($style);
-
-//add row
-        $tr = new TableRowCompositeNode();
-        $table->addNode($tr);
-//add cols
-        $col = new TableColCompositeNode();
-        $col->addText("Large text... Large text...Large text...Large text...Large text...Large text...Large text...");
-        $col->getLastPCompositeNode()->addNode( new BrNode() );
-        $tr->addNode($col);
-
-        $col = new TableColCompositeNode();
-        $col->addText("Large text... Large text...Large text...Large text...Large text...Large text...Large text...");
-        $col->getLastPCompositeNode()->addNode( new BrNode() );
-        $tr->addNode($col);
-//add row
-        $tr = new TableRowCompositeNode();
-        $table->addNode($tr);
-
-        $col = new TableColCompositeNode();
-        $tr->addNode($col);
-
-        $list = new ListCompositeNode();
-        $col->addNode($list);
-        $col->getLastPCompositeNode()->addNode( new BrNode() );
-
-        for($i = 1; $i <= 10; $i ++) {
-            $item = new ListItemCompositeNode();
-            $item->addText("List item $i");
-            $list->addNode( $item );
-        }
-
-//add image in col
-        $attach = $doc->getAttachImage(dirname(__FILE__).DIRECTORY_SEPARATOR.'img1.jpg');
-        $drawingNode = new DrawingNode();
-        $drawingNode->addImage($attach);
-
-        $col = new TableColCompositeNode();
-        $tr->addNode($col);
-        $col->getLastPCompositeNode()->addNode( $drawingNode );
-
-
-        $doc->saveAs('./table.docx');
-//        if(Auth::user()->role !== 'admin') return redirect('/login');
-//
-//        return $this->generateDocReport(Carbon::today()->toDateString());
+        return $this->generateDocReport(Carbon::today()->toDateString());
     }
     
     
@@ -147,6 +96,8 @@ class ReportController extends Controller
         $teams->load(['members.reports' => function ($query) use($date){
             $query->wheredate('created_at', '=', $date);
         }]);
+
+//        return $teams;
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWord->addSection();
@@ -173,9 +124,9 @@ class ReportController extends Controller
                 $table->addCell(3000)->addText(htmlspecialchars($team_member->name, ENT_COMPAT, 'UTF-8'));
                 if(count($team_member->reports->toArray())>0){
                     foreach ($team_member->reports as $report){
-//                        $table->addCell(6000)->addText(trim(htmlspecialchars(strip_tags($report->task_done), ENT_COMPAT, 'UTF-8')));
-                        $table->addCell(6000)->addText(htmlspecialchars($report->task_done, ENT_COMPAT, 'UTF-8'), $fontStyle);
-                        $table->addCell(6000)->addText(htmlspecialchars($report->task_done, ENT_COMPAT, 'UTF-8'), $fontStyle);
+                        $html = new Html2Text($report->task_done);
+                        $task = $html->getText();
+                        $table->addCell(6000)->addText(htmlspecialchars($task, ENT_COMPAT, 'UTF-8'), $fontStyle);
                     }
                 }else{
                     $table->addCell(6000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
@@ -240,5 +191,6 @@ class ReportController extends Controller
 
         return redirect('/');
     }
+
     
 }

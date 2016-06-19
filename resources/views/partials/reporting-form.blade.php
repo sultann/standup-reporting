@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">Update Your StandUp for today</div>
+    <div class="panel-heading">Update Your StandUp Report</div>
     <div class="panel-body">
         {!! Form::open(array('url' => 'report/store', 'id'=>'reporting-form')) !!}
 
@@ -32,7 +32,7 @@
 
 
         <div class="form-group">
-            {!! Form::submit(isset($TodaysReport->task_done)?'Update':'Submit', ['class' => 'form-control btn btn-primary']) !!}
+            {!! Form::submit(isset($TodaysReport->task_done)?'Update':'Submit', ['class' => 'btn btn-primary']) !!}
         </div>
         {!! Form::close() !!}
     </div>

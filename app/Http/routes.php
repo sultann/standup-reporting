@@ -11,7 +11,7 @@
 |
 */
 use Carbon\Carbon;
-
+use App\lib\Html2Text;
 Route::get('/', 'HomeController@index');
 Route::Post('/', 'HomeController@filteredReport');
 Route::auth();
@@ -28,6 +28,10 @@ Route::post('profile/update', 'ProfileController@update');
 
 
 Route::get('/blocker/resolve/{id}', 'BlockerController@resolveBlocker');
+Route::get('test', function(){
+	$html = new Html2Text('Hello, &quot;<b>world</b>&quot;');
+	return $html->getText();
+}) ;
 
 
 
