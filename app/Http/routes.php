@@ -30,4 +30,16 @@ Route::post('profile/update', 'ProfileController@update');
 Route::get('/blocker/resolve/{id}', 'BlockerController@resolveBlocker');
 
 
+Route::get('/test', function(){
+	$doc = new VsWord();
+	$paragraph = new PCompositeNode();
+	$paragraph->addPNodeStyle( new AlignNode(AlignNode::TYPE_RIGHT) );
+	$paragraph->addText("Some more text ... More text about... Some more text ... More text about... Some more text ... More text about...");
+	/**/
+	echo '<pre>'.($doc->getDocument()->getBody()->look()).'</pre>';
+
+	$doc->saveAs('align.docx');
+});
+
+
 
