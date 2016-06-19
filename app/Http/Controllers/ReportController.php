@@ -13,7 +13,8 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
-use App\lib\Html2Text;
+use App\Lib\Html2Text;
+use PhpOffice\PhpWord\PhpWord;
 
 class ReportController extends Controller
 {
