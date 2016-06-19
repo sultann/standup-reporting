@@ -4,7 +4,7 @@
 
         <div class="panel-body">
             {{--@if(count(user_reports_reports>0))--}}
-            <table class="table table-condensed">
+            <table class="table table-condensed table-bordered">
                 <thead> <tr><th style="width: 350px;">Name</th> <th>Report</th></tr></thead>
 
                 @foreach($team->members as $member)
