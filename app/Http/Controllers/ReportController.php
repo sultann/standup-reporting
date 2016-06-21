@@ -126,8 +126,6 @@ class ReportController extends Controller
                         $task = $html->getText();
                         $table->addCell(6000)->addText(htmlspecialchars($task, ENT_COMPAT, 'UTF-8'), $fontStyle);
 
-                        $table->addCell(6000)->addText(trim(htmlspecialchars(strip_tags($report->task_done), ENT_COMPAT, 'UTF-8')));
-
                     }
                 }else{
                     $table->addCell(6000)->addText(htmlspecialchars('X', ENT_COMPAT, 'UTF-8'));
