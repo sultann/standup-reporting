@@ -93,7 +93,7 @@ class ReportController extends Controller
             $date = Carbon::parse($date)->toDateString();
         }
         if(Auth::user()->role !== 'admin') return redirect('/login');
-        $teams = \App\Team::all();
+        $teams = Team::all();
         $teams->load(['members.reports' => function ($query) use($date){
             $query->wheredate('created_at', '=', $date);
         }]);
@@ -153,7 +153,6 @@ class ReportController extends Controller
     public function store(Request $request){
         // @todo have to validate the form
 
-//        return $request->all();
         $todaysReport = null;
         $lastDayReport= null;
         $user = User::find(Auth::user()->id);
