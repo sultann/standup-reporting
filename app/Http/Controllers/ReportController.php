@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\View;
 use App\Lib\Html2Text;
 use PhpOffice\PhpWord\PhpWord;
 
+
 class ReportController extends Controller
 {
 
