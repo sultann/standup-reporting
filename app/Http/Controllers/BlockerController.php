@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class BlockerController extends Controller
 {
+    public function blockerDetails(Blocker $id){
+        $blocker = load('id.user');
+        return $blocker;
+                        return view::make('single-blocker',
+                            [
+                                'blocker' => $id,
+                            ]
+
+                            );
+    }
     
     public function resolveBlocker(Blocker $id){
         $blocker = $id;

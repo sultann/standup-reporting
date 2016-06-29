@@ -8,7 +8,7 @@
                 @foreach($blockers as $blocker)
                     <li class="blocker-item">
                         <div class="blocker">
-                            {{$blocker->blocker}}
+                            <a href="/blocker/{{$blocker->id}}" >{{$blocker->blocker}}</a>
                         </div>
                         <div class="blocker-meta">
                                             <span class="blocker-submitted">

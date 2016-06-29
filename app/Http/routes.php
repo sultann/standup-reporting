@@ -27,6 +27,7 @@ Route::post('profile/update', 'ProfileController@update');
 
 
 Route::get('/blocker/resolve/{id}', 'BlockerController@resolveBlocker');
+Route::get('/blocker/{id}', 'BlockerController@blockerDetails');
 
 
 
