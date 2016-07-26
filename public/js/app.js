@@ -9,14 +9,14 @@ jQuery(document).ready(function ($) {
 
     var totalBlockers = $('.late-reported-list li');
     if(totalBlockers.length>10){
-        var button = $('<li>');
+        var button = $('<p>');
             button.addClass('show-more-blockers')
-                .text('Show More')
+                .text('Show More/Less')
                 .on('click', function () {
                     totalBlockers.eq(9).nextAll('li').toggle()
                 });
         totalBlockers.eq(9).nextAll('li').hide();
-        button.insertAfter(totalBlockers.eq(9));
+        button.insertAfter('.late-reported-list');
     }
 
 

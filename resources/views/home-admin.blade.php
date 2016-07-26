@@ -44,11 +44,16 @@
                                         @foreach($team->members as $member)
                                             <tr>
                                                 <td class="person-name"><a href="report/user/{{$member->id}}">{{$member->name}}</a></td>
-                                                <td class="person-task">   @if(isset($member->reports[0]))
+                                                <td class="person-task">
+                                                    @if(isset($member->reports[0]) && !empty(strip_tags($member->reports[0]->task_done)))
                                                         {!! $member->reports[0]->task_done !!}
                                                     @else
                                                         X
                                                     @endif
+
+                                                        @if(isset($member->reports[0]) && ($member->reports[0]->absent == 1))
+                                                            <i class="fa fa-user-times pull-right absent-mark" aria-hidden="true" title="Seen absent on scrum meeting"></i>
+                                                        @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -62,9 +67,9 @@
                 </div>
                 </div>
             <div class="col-md-4">
-            @include('partials.not-reported-list')
-            @include('partials.blocker-list')
-            @include('partials.reporting-form')
+                @include('partials.reporting-form')
+                @include('partials.not-reported-list')
+            {{--@include('partials.blocker-list')--}}
 
 
             </div>

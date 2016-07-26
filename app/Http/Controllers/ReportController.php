@@ -27,7 +27,7 @@ class ReportController extends Controller
 
 
     public function userReports(User $id){
-        if(Auth::user()->role !== 'admin') return redirect('/login');
+        if ( !in_array(Auth::user()->role , array('admin','teamlead'), true ) )  return redirect('/login');
         $user = $id;
         $user_reports = $user
             ->reports()
@@ -45,7 +45,7 @@ class ReportController extends Controller
     }
 
     public function teamReports(Team $team_id){
-        if(Auth::user()->role !== 'admin') return redirect('/login');
+        if ( !in_array(Auth::user()->role , array('admin','teamlead'), true ) )  return redirect('/login');
         $team_member_ids = $team_id->members()->pluck('id');
         $team_reports = Report::with('user')
             ->whereIn('user_id', $team_member_ids)
@@ -148,6 +148,31 @@ class ReportController extends Controller
     }
 
     /**
+     * Save the persons who have not attended scrum meeting
+    */
+    public function save_standup_absentee(Request $request){
+        if ( !in_array(Auth::user()->role , array('admin','teamlead'), true ) )  return redirect('/login');
+        $absentees = $request->absentee;
+
+        foreach ($absentees as $absentee){
+            $user = User::findOrFail($absentee);
+            $todaysReport = Report::where('user_id',$user->id)->whereDate('created_at','=',Carbon::today()->toDateString())->first();
+            if($todaysReport){
+                DB::table('reports')
+                    ->where('id', $todaysReport->id)
+                    ->update(['absent' => 1]);
+            }else{
+                $report = new Report();
+                $report->user_id  = $user->id;
+                $report->absent  = 1;
+                $report->save();
+            }
+        }
+        return redirect('/');
+
+    }
+
+    /**
      *  Stores new report in the DB
      */
     public function store(Request $request){
@@ -190,6 +215,7 @@ class ReportController extends Controller
 
         return redirect('/');
     }
+
 
     
 }

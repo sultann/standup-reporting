@@ -26,6 +26,9 @@
                                             <td class="person-name"><a href="/report/user/{{$report->user->id}}">{{$report->user->name}}</a></td>
                                             <td class="person-task">
                                              {!! $report->task_done !!}
+                                                @if($report->absent == 1)
+                                                    <i class="fa fa-user-times pull-right absent-mark" aria-hidden="true" title="Seen absent on scrum meeting"></i>
+                                                @endif
                                             </td>
                                         </tr>
                                             <?php $date = $report->created_at->format('d'); ?>

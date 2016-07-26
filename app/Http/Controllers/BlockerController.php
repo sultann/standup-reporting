@@ -12,17 +12,45 @@ use Illuminate\Support\Facades\View;
 
 class BlockerController extends Controller
 {
-    public function blockerDetails(Blocker $id){
-        $blocker = load('id.user');
-        return $blocker;
-                        return view::make('single-blocker',
-                            [
-                                'blocker' => $id,
-                            ]
-
-                            );
+    public function __construct()
+    {
+        $this->middleware('auth');
     }
-    
+
+
+    public function index(){
+          $blockers = Blocker::with('user')
+              ->orderBy('created_at', 'desc')
+              ->where('status', 1)
+              ->paginate(20);
+        return View::make('blocker')->with([
+            'blockers' =>   $blockers
+        ]);
+        return $blockers;
+    }
+
+
+	/**
+     * Returns single blocker's contents and comments
+	 * @param Blocker $id
+     * @return mixed
+     */
+    public function blockerDetails(Blocker $id){
+        $blocker = $id;
+        $blocker->load(['user','comment.user'])->get();
+        return view::make('single-blocker', [
+            'blocker' => $blocker,
+            'user'  =>  $blocker->user,
+            'comments'    => $blocker->comment,
+        ]);
+//        return 'worked';
+    }
+
+	/**
+     * Marks the blocker as resolve
+     * @param Blocker $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function resolveBlocker(Blocker $id){
         $blocker = $id;
         $blocker_user_id = $blocker->user()->first()->id;

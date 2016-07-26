@@ -4,16 +4,18 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','teams', 'role'
+        'name', 'email', 'password','teams', 'role', 'avatar_url'
     ];
 
     /**
@@ -24,6 +26,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    protected $dates = ['deleted_at'];
 
     public function allTeams(){
         return Team::all();
@@ -38,6 +41,10 @@ class User extends Authenticatable
     }
     public function blockers(){
         return $this->hasMany(Blocker::class);
+    }
+
+    public function blocker_comments(){
+        return $this->hasMany(BlockerComment::class);
     }
 
     public function openBlockers(){
@@ -55,8 +62,10 @@ class User extends Authenticatable
     public function lastEmptyReport ()
     {
         return $this->whereDoesntHave('reports', function ($q){
-            return $q->wheredate('created_at', '=', Carbon::today()->toDateString());
+            return $q->wheredate('created_at', '=', Carbon::today()->toDateString())
+                ->where(trim('task_done'), '!=', '');
         });
     }
+
     
 }

@@ -5,10 +5,20 @@
         <div class="row">
             <div class="col-md-3">
             {{--{{dd($profile_data)}}--}}
-                <img src="/images/avatar.png" alt="" class="img-responsive">
+
+                <div class="thumbnail">
+                    @if(!empty($user->avatar_url))
+                        <img src="{{$user->avatar_url}}" alt="..." class="img-responsive">
+                    @else
+                        <img src="/images/avatar.jpg" alt="..." class="img-responsive">
+                    @endif
+                </div>
             </div>
             <div class="col-md-6 col-md-offset-1">
-                    {!! Form::open(array('url' => 'profile/update')) !!}
+                @if(Session::has('message'))
+                    <p class="alert alert-info">{{ Session::get('message') }}</p>
+                @endif
+                    {!! Form::open(array('url' => 'profile/update', 'files' => true)) !!}
                 <div class="form-group">
                     <label for="">Name:</label>
                     <input type="text" class="form-control" name="name" value="{{$user->name}}">
@@ -28,7 +38,10 @@
 
                     <p>Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.</p>
                 </div>
-
+                <div class="form-group">
+                    <input type="file" id="avatar" name="avatar" class="form-control">
+                    <p class="help-block">Upload your avatar</p>
+                </div>
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </div>

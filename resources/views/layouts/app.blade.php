@@ -56,6 +56,7 @@
                         <li><a href="{{ url('/register') }}">Register</a></li>
                     @else
                         <li><a href="{{ url('/') }}">Home</a></li>
+                        <li><a href="{{ url('/blocker') }}">Blockers <span class="badge red">4</span></a></li>
                         <li><a href="{{ url('/profile') }}">Profile</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -87,13 +88,11 @@
     <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
     <script>
 
-var ckEditorID;
-
-ckEditorID = ['task_done', 'task_done_last_day'];
-ckEditorID.forEach(function (a) {
-    CKEDITOR.config.forcePasteAsPlainText = true;
-    CKEDITOR.replace( a,
-            {
+        jQuery(document).ready(function(){
+            var ckConfig = {
+                startupOutlineBlocks:true,
+                scayt_autoStartup:true,
+                allowedContent:'p h1{text-align}; a[!href]; strong em; p(tip); ul',
                 toolbar :
                         [
                             {
@@ -103,8 +102,10 @@ ckEditorID.forEach(function (a) {
                                 items : [ 'BulletedList','NumberedList']
                             }
                         ]
-            })
-});
+            };
+            $('#task_done,#task_done_last_day').ckeditor(ckConfig);
+           console.log('worked');
+        });
     </script>
 </body>
 </html>

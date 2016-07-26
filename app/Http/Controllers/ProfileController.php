@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 class ProfileController extends Controller
@@ -34,7 +36,7 @@ class ProfileController extends Controller
     
     
     public function update(Request $request){
-
+//        return $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:50',
         ]);
@@ -43,8 +45,43 @@ class ProfileController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        if($request->hasFile('avatar')) {
+            $file = Input::file('avatar');
+            $name = $file->getClientOriginalName();
+            $file->move(public_path().'/images/', $name);
+            User::find($this->user_id)->update(['avatar_url' => '/images/'.$name]);
+
+        }
+
         User::find($this->user_id)->update(['name' => $request->name]);
+
+
         User::find($this->user_id)->teams()->sync($request->teams);
-        return redirect('/profile');
+//        return   User::find($this->user_id);
+        return Redirect::to('/profile')->with('message', 'Your profile has been updated');
+    }
+
+
+
+    public function update_user(Request $request){
+        if ( !in_array(Auth::user()->role , array('admin','teamlead'), true ) )  return redirect('/login');
+        $user  = User::findOrFail($request->user);
+        $user->update(['role' =>$request->role]);
+        if(isset($request->user_delete) && ($request->user_delete == 'on')){
+            $reports =  $user->reports()->get()->pluck('id');
+            DB::table('reports')->whereIn('id', $reports)->delete();
+
+            $blockers =  $user->blockers()->get()->pluck('id');
+            DB::table('blockers')->whereIn('id', $blockers)->delete();
+
+            $blocker_comments =  $user->blocker_comments()->get()->pluck('id');
+            DB::table('blocker_comments')->whereIn('id', $blocker_comments)->delete();
+
+            $user->delete();
+
+        }
+        return Redirect::to('/')->with('message', 'Your profile has been updated');
     }
 }
+
+

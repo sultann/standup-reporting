@@ -11,6 +11,9 @@
                     </td>
                     <td>
                         {!! $report->task_done !!}
+                        @if(isset($report->absent))
+                            <i class="fa fa-user-times pull-right absent-mark" aria-hidden="true" title="Seen absent on scrum meeting"></i>
+                        @endif
                     </td>
                 </tr>
             @endforeach

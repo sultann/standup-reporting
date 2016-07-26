@@ -75,7 +75,37 @@ class HomeController extends Controller
                 ->with('TodaysReport', $todayReport)
                 ->with('late_parties', $lateParties)
                 ->with('yesterday', Auth::user()->lastReport()->get())  ;
-        }else {
+        }elseif (Auth::user()->role == 'teamlead'){
+            $userReports = Auth::user();
+            $userReports->load(['teams.members.reports' => function ($query) use($date) {
+                $query->wheredate('created_at', '=', $date);
+            }])->get();
+            $lateParties = new User();
+            $lateParties = $lateParties->lastEmptyReport()->get();
+
+            $todayReport = Auth::user()
+                ->reports()
+                ->whereDate('created_at', '=', Carbon::today()->toDateString())
+                ->first();
+
+
+
+//            return Auth::user()->lastReport()->get();
+
+            return view::make('home-lead')
+                ->with('reports', $userReports)
+                ->with('teams', $userReports->teams)
+                ->with('date', $date)
+                ->with('late_parties', $lateParties)
+                ->with('todays_report', $todayReport)
+                ->with('last_report', Auth::user()->lastReport()->get());
+
+
+
+
+
+        }
+        else {
 
             /*Generates running months reports*/
             $userReports = Auth::user();

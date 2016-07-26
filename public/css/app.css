@@ -5796,7 +5796,13 @@ a.generate-report-btn {
 
 .team-selection {
   height: 350px !important; }
-.blocker-area{
-  display: none;
-  }
+
+.blocker-area {
+  display: none; }
+
+.absent-mark {
+  color: red;
+  height: 30px;
+  margin-left: 10px; }
+
 /*# sourceMappingURL=app.css.map */

@@ -17,6 +17,7 @@ Route::auth();
 
 Route::get('report/create', 'ReportController@create');
 Route::post('report/store', 'ReportController@store');
+Route::post('report/absentee', 'ReportController@save_standup_absentee');
 Route::get('report/user/{id}', 'ReportController@userReports');
 Route::get('report/team/{team_id}', 'ReportController@teamReports');
 Route::get('/generate-report', 'ReportController@generateTodayDocReport');
@@ -24,11 +25,15 @@ Route::get('generate-report/{date}', 'ReportController@generateCustomDocReport')
 
 Route::get('profile', 'ProfileController@index');
 Route::post('profile/update', 'ProfileController@update');
+Route::post('profile/update_user', 'ProfileController@update_user');
 
 
+Route::get('/blocker', 'BlockerController@index');
 Route::get('/blocker/resolve/{id}', 'BlockerController@resolveBlocker');
 Route::get('/blocker/{id}', 'BlockerController@blockerDetails');
 
+//Blocker Routes
+ Route::post('blocker-comment/store', 'BlockerCommentController@store');
 
 
 

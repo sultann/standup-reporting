@@ -10,11 +10,17 @@
                 @foreach($team->members as $member)
                     <tr>
                         <td>{{$member->name}}</td>
-                        @if(count($member->reports)>0)
-                            <td>{!! $member->reports[0]->task_done !!}</td>
+                        <td>
+                            @if(isset($member->reports->first()['task_done']))
+                            {!! $member->reports->first()['task_done'] !!}
                         @else
-                            <td>X</td>
+
+                                X
                         @endif
+                                @if(isset($member->reports->first()['absent']))
+                                    <i class="fa fa-user-times pull-right absent-mark" aria-hidden="true" title="Seen absent on scrum meeting"></i>
+                                @endif
+                        </td>
                     </tr>
                 @endforeach
             </table>

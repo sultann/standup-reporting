@@ -14,9 +14,13 @@ class CreateBlockerCommentsTable extends Migration
     {
         Schema::create('blocker_comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('blocker_id')->unsigned()->nullable();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->text('comment', 500);
             $table->timestamps();
+            $table->foreign('blocker_id')->references('id')->on('blockers');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
         });
     }
 
